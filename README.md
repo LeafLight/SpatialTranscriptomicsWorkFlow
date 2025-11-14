@@ -4,11 +4,12 @@ A comprehensive spatial transcriptomics analysis workflow for 10x Genomics Visiu
 
 ## 📁 Project Structure
 
+```
 ├── scripts/                          # Analysis scripts
 │   ├── 1_ReadSpatialData.R          # Spatial data loading
 │   ├── 2_SpatialDataQC.R            # Spatial data quality control
 │   ├── 3_IntegrationAndClustering.R # Data integration and clustering
-│   ├── 4_scDataPreProcessing.R      # Single-cell data preprocessing
+│   ├── 4_scDataPreProcessing.R      # Single-cell data preprocessing for SPOTlight
 │   ├── 5_SPOTlight_Deconv.R         # SPOTlight cell type deconvolution
 │   ├── 6_SelectSpatialSpots.R       # Spatial spot selection
 │   ├── 7_Unsupervised_Deconv.R      # Unsupervised deconvolution
@@ -17,6 +18,7 @@ A comprehensive spatial transcriptomics analysis workflow for 10x Genomics Visiu
 ├── data/                            # Data directory
 ├── results/                         # Output results
 └── README.md
+```
 
 ## 🛠️ Requirements
 
