@@ -20,6 +20,8 @@ A comprehensive spatial transcriptomics analysis workflow for 10x Genomics Visiu
 └── README.md
 ```
 
+![workflow]( [Figure1.tif](src_README/Figure1.tif) )
+
 ## 🛠️ Requirements
 
 ### R Environment
@@ -27,6 +29,10 @@ A comprehensive spatial transcriptomics analysis workflow for 10x Genomics Visiu
 - macOS/Linux/Windows compatible
 
 ### R Package Dependencies
+
+![packages](./src_README/README_packages.png)
+
+
 
 #### Core Analysis Packages
 ```r
