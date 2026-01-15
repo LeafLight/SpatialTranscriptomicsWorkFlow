@@ -129,7 +129,7 @@ library(scran)            # Single-cell analysis methods
 
 ### Quality Control
 - Automated QC metric calculation
-- Interactive QC plots
+- QC visualization
 - Spatial distribution visualization
 
 ### Integration Analysis
