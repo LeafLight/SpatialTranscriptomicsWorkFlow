@@ -52,7 +52,7 @@ p <- DimPlot(seurat_combined, group.by = "seurat_clusters", label = TRUE)
 ggsave("./results/umap_integrated_by_cluster.tiff", p, width = 8, height = 6)
 DimPlot(seurat_combined, group.by = "seurat_clusters", label = TRUE)
 # Save the integrated data
-saveRDS(seurat_combined, file = "./data/seurat_integrated_spatial.rds")
+# saveRDS(seurat_combined, file = "./data/seurat_integrated_spatial.rds")
 # visualization the clustering result on the spatial location
 p <- Seurat::SpatialDimPlot(seurat_combined,
                pt.size.factor = 3,
@@ -127,5 +127,50 @@ p <- SpatialFeaturePlot(seurat_obj_B1, features = top_sv_genes, ncol = 2, image.
 ggsave("./results/spatially_variable_genes_B1.tiff", p, width = 10, height = 6, dpi=300)
 
 
+# -------------------------------------------------------------------
+# Validation of Clustering via Colon Histology Layer-Specific Markers
+# (Generating Figure 2H for the manuscript)
+# -------------------------------------------------------------------
 
+# Switch default assay back to "SCT" to access the full transcriptome
+# (The 'integrated' assay only contains the highly variable integration features)
+DefaultAssay(seurat_combined) <- "SCT"
 
+# Define canonical layer-specific markers for colon tissue
+colon_markers <- c(
+  "Epcam", "Krt8", "Muc2",    # Mucosal Epithelium & Goblet Cells (黏膜上皮/杯状细胞)
+  "Col1a1", "Col1a2", "Vim",  # Lamina Propria & Submucosa (固有层/黏膜下层间质)
+  "Acta2", "Tagln", "Myh11"   # Muscularis Propria (平滑肌层)
+)
+
+# Safely subset to markers actually present in the data matrix to avoid plot errors
+features_to_plot <- intersect(colon_markers, rownames(seurat_combined))
+
+# 1. DotPlot: Quantitative expression abundance across computational clusters
+p_dot <- DotPlot(seurat_combined, features = features_to_plot, group.by = "seurat_clusters") +
+  theme_classic() +
+  coord_flip() + # Flip axes: genes as rows, clusters as columns for better readability
+  labs(title = "Validation of Colon Histology Layers",
+       x = "Layer-Specific Marker Genes",
+       y = "Computational Clusters") +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  )
+
+ggsave("./results/colon_layer_markers_dotplot.tiff", p_dot, width = 7, height = 6, dpi = 300)
+
+# 2. SpatialFeaturePlot: Spatial mapping of representative layer markers
+# Extracting one representative marker per anatomical layer
+spatial_markers <- intersect(c("Epcam", "Col1a1", "Acta2"), rownames(seurat_combined))
+
+if(length(spatial_markers) > 0) {
+  p_spatial_val <- SpatialFeaturePlot(
+    seurat_combined,
+    features = spatial_markers,
+    ncol = 2,
+    image.scale = "hires",
+    pt.size.factor = 2.5
+  ) & theme(legend.position = "right")
+  ggsave("./results/colon_layer_markers_spatial.tiff", p_spatial_val, width = 5, height = 5, dpi = 300)
+}
