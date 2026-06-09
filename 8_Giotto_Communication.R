@@ -1,5 +1,7 @@
 library(Giotto)
 library(Seurat)
+library(ggplot2)
+library(dplyr)
 seurat_obj_A1 <- readRDS("./data/seurat_obj_A1_deconvoluted.rds")
 seurat_obj_B1 <- readRDS("./data/seurat_obj_B1_deconvoluted.rds")
 fromSeuratToGiotto <- function(obj){
@@ -41,7 +43,11 @@ ccc_res <- exprCellCellcom(
   feat_set_2=lr_to,
   verbose = T
 )
-p <- ggplot(ccc_res[(p.adj < 0.05) & log2fc>2, ], aes(x = LR_cell_comb, y = LR_comb, size = log2fc, color = LR_cell_comb)) +
+ccc_res_top20_A1 <- ccc_res %>%
+  filter(p.adj < 0.05) %>%
+  arrange(desc(log2fc)) %>%
+  head(20)
+p <- ggplot(ccc_res_top20_A1, aes(x = LR_cell_comb, y = LR_comb, size = log2fc, color = LR_cell_comb)) +
   geom_point(alpha = 0.7) +
   theme_minimal() +
   labs(title = "Custom Cell-Cell Communication Plot",
@@ -51,7 +57,7 @@ p <- ggplot(ccc_res[(p.adj < 0.05) & log2fc>2, ], aes(x = LR_cell_comb, y = LR_c
   theme(
     axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)
   )
-ggsave("./results/Giotto_A1_cellcell_communication.tiff", p, width = 8, height = 24)
+ggsave("./results/Giotto_A1_cellcell_communication_top_20_by_log2fc.tiff", p, width = 7, height = 7)
 
 
 giotto_B1 <- fromSeuratToGiotto(seurat_obj_B1)
@@ -87,7 +93,11 @@ ccc_res <- exprCellCellcom(
   feat_set_2=lr_to,
   verbose = T
 )
-p <- ggplot(ccc_res[(p.adj < 0.05) & log2fc>1, ], aes(x = LR_cell_comb, y = LR_comb, size = log2fc, color = LR_cell_comb)) +
+ccc_res_top20_B1 <- ccc_res %>%
+  filter(p.adj < 0.05) %>%
+  arrange(desc(log2fc)) %>%
+  head(20)
+p <- ggplot(ccc_res_top20_B1, aes(x = LR_cell_comb, y = LR_comb, size = log2fc, color = LR_cell_comb)) +
   geom_point(alpha = 0.7) +
   theme_minimal() +
   labs(title = "Custom Cell-Cell Communication Plot",
@@ -97,4 +107,4 @@ p <- ggplot(ccc_res[(p.adj < 0.05) & log2fc>1, ], aes(x = LR_cell_comb, y = LR_c
   theme(
     axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)
   )
-ggsave("./results/Giotto_B1_cellcell_communication.tiff", p, width = 14, height = 24)
+ggsave("./results/Giotto_B1_cellcell_communication_top20_by_log2fc.tiff", p, width = 7, height = 7)
