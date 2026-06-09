@@ -53,7 +53,7 @@ p <- DimPlot(seurat_combined, group.by = "seurat_clusters", label = TRUE)
 ggsave("./results/umap_integrated_by_cluster.tiff", p, width = 8, height = 6)
 DimPlot(seurat_combined, group.by = "seurat_clusters", label = TRUE)
 # Save the integrated data
-# saveRDS(seurat_combined, file = "./data/seurat_integrated_spatial.rds")
+saveRDS(seurat_combined, file = "./data/seurat_integrated_spatial.rds")
 # visualization the clustering result on the spatial location
 p <- Seurat::SpatialDimPlot(seurat_combined,
                pt.size.factor = 3,
@@ -175,3 +175,4 @@ if(length(spatial_markers) > 0) {
   ) & theme(legend.position = "right")
   ggsave("./results/colon_layer_markers_spatial.tiff", p_spatial_val, width = 5, height = 5, dpi = 300)
 }
+
