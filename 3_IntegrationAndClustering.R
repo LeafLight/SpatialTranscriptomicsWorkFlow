@@ -37,11 +37,12 @@ pct <- seurat_combined[["pca"]]@stdev / sum(seurat_combined[["pca"]]@stdev) * 10
 cumu <- cumsum(pct)
 pc.use <- min(which(cumu > 90 & pct < 5)[1], sort(which((pct[1:length(pct) - 1] - pct[2:length(pct)]) > 0.1), decreasing = TRUE)[1] + 1)
 
-ElbowPlot(seurat_combined, ndims = pc.use+5)$data %>% ggplot() +
+p_elbow <-  ElbowPlot(seurat_combined, ndims = pc.use+5)$data %>% ggplot() +
   geom_point(aes(x = dims, y = stdev)) +
   geom_vline(xintercept = pc.use, color = "darkred") +
   theme_bw() + labs(title = "Elbow plot: quantitative approach")
-
+p_elbow
+ggsave("./results/integrated_elbow_plot.tiff", p_elbow, width = 6, height = 4, dpi = 300)
 seurat_combined <- RunUMAP(seurat_combined, dims = 1:pc.use)
 seurat_combined <- FindNeighbors(seurat_combined, dims = 1:pc.use)
 seurat_combined <- FindClusters(seurat_combined, resolution = 0.5)
